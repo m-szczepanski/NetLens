@@ -11,20 +11,20 @@ Network installers, IT admins, and self-hosters constantly need to answer one qu
 - Present it in a fast, minimal, non-technical-friendly web UI
 - Offer enough live traffic visibility to answer "is this device talking, and to what" — without trying to be a packet forensics suite
 - Ship as one static binary, no install dependencies beyond a capture driver
-- 
+
 ## Non-goals
 
 - Reproducing Wireshark's ~3,000 protocol dissectors or its display-filter grammar
 - Full stream reconstruction, file carving, or long-term full-traffic (pcap firehose) recording
 - Deep packet inspection for security/forensic investigation
 - Being a general-purpose port/vulnerability scanner (that's nmap/Nessus territory)
-- 
+
 ## Target Users
 
 1. Network installers/integrators setting up or auditing SMB and home networks
 2. IT admins who need a quick inventory of what's plugged into a LAN
 3. Homelab/self-hosting hobbyists
-4. 
+
 ## Feature Scope, Phased
 
 ### Phase 1 — Core Discovery (MVP)

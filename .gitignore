@@ -24,8 +24,7 @@ profile.cov
 go.work
 go.work.sum
 
-# env file
-.env
+# env files are ignored per-directory; frontend/.env is committed on purpose (empty PUBLIC_* defaults)
 
 # Editor/IDE
 # .idea/

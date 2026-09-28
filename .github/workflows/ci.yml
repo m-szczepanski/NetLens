@@ -15,11 +15,13 @@ jobs:
       - uses: actions/setup-go@v6
         with:
           go-version: stable
-      - run: make lint
+      - name: Vet + gofmt
+        run: make lint
       - run: go build ./...
       - run: go test ./...
       - uses: golangci/golangci-lint-action@v9
         with:
+          version: v2.14
           working-directory: backend
 
   frontend:

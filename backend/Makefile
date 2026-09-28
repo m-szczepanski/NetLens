@@ -17,7 +17,7 @@ run:
 lint:
 	$(GO) vet ./...
 	@test -z "$(shell gofmt -l .)" || { echo "gofmt needed:"; gofmt -l .; exit 1; }
-	golangci-lint run
+	@command -v golangci-lint >/dev/null 2>&1 && golangci-lint run || echo "golangci-lint not installed, skipped (CI runs it via golangci-lint-action)"
 
 fmt:
 	$(GO) fmt ./...

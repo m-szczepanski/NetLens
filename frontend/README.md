@@ -7,15 +7,20 @@ and the frontend talks to the backend on the same origin.
 ## Development
 
 ```sh
-npm install
+npm ci   # or npm install; CI uses npm ci
 npm run dev
 ```
 
-The dev server runs independently of the Go backend. To point it at a local backend, set the
-base URLs in `.env` (or the environment) and restart:
+The dev server (http://localhost:5173) runs independently of the Go backend.
+With the committed `.env` (empty values) it defaults to the local backend at
+`http://localhost:8080`, which is what `make run` in `backend/` serves — no
+configuration needed for side-by-side development.
+
+To target a different backend, set the base URLs in `.env` (or the environment)
+and restart:
 
 ```sh
-PUBLIC_BACKEND_HTTP_URL=http://localhost:8080 npm run dev
+PUBLIC_BACKEND_HTTP_URL=http://192.168.1.50:8080 npm run dev
 ```
 
 `PUBLIC_BACKEND_WS_URL` is optional; by default the WebSocket URL is derived from the HTTP URL

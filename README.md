@@ -2,6 +2,10 @@
 
 A browser-based tool for people who build and configure networks, focused on knowing everything connected to a LAN - not a Wireshark clone.
 
+![status](https://img.shields.io/badge/status-early%20development-orange)
+![platform](https://img.shields.io/badge/platform-Windows%20%7C%20macOS%20%7C%20Linux-blue)
+![license](https://img.shields.io/badge/license-MIT-green)
+
 ## Vision
 
 Network installers, IT admins, and self-hosters constantly need to answer one question: "what's actually on this network?" Existing tools split the job awkwardly — Wireshark shows you every byte but nothing about devices; nmap tells you about hosts but lives in a terminal; router admin pages are vendor-locked and ugly.

@@ -164,7 +164,7 @@ The frontend can also be deployed independently as a static web application for 
 - `chi` or `echo` (or plain `net/http`) for routing
 - `golang.org/x/sync/errgroup` - coordinating concurrent scan workers cleanly
 
-### Frontend
+### Svelte Frontend
 
 - **SvelteKit**
 - **Svelte 5**

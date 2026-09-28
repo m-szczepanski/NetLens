@@ -189,6 +189,38 @@ Potential future dependencies, only when justified by actual requirements:
 
 ## Development
 
+The repository is laid out as:
+
+```text
+/
+  backend/    Go module (module netlens/backend)
+    cmd/netlens
+    internal/{scanner,capture,api,domain,discovery,fingerprint,storage,config}
+    Makefile
+  frontend/   SvelteKit application
+```
+
+### Backend
+
+```bash
+cd backend
+make run          # start the API server on 127.0.0.1:8080
+make build        # compile the netlens binary to bin/netlens
+make test         # go test ./...
+make lint         # go vet + gofmt check + golangci-lint
+```
+
+Flags and environment fallbacks:
+
+| Flag         | Env                 | Default         | Purpose                          |
+| ------------ | ------------------- | --------------- | -------------------------------- |
+| `-listen`    | `NETLENS_LISTEN`    | `127.0.0.1:8080`| HTTP listen address (API, UI)    |
+| `-interface` | `NETLENS_INTERFACE` | auto-detect     | interface override for discovery |
+
+The development backend default matches the frontend's `DEV_BACKEND_DEFAULT`, so
+`npm run dev` works against `make run` without extra configuration once `/api/status`
+is proxied or set via `PUBLIC_BACKEND_HTTP_URL`.
+
 ### Frontend
 
 The frontend is developed independently as a SvelteKit application.

@@ -189,58 +189,78 @@ Potential future dependencies, only when justified by actual requirements:
 
 ## Development
 
-The repository is laid out as:
+### Prerequisites
 
-```text
-/
-  backend/    Go module (module netlens/backend)
-    cmd/netlens
-    internal/{scanner,capture,api,domain,discovery,fingerprint,storage,config}
-    Makefile
-  frontend/   SvelteKit application
-```
+- Go 1.24+ (backend builds and runs)
+- Node.js 22 + npm (frontend development only — never required at runtime; end users get a single Go binary)
+- Optional: `golangci-lint` v2 (`brew install golangci-lint`) — `make lint` skips it with a notice if missing; CI runs it via the lint action
 
-### Backend
+### Quickstart (clean checkout)
 
 ```bash
 cd backend
-make run          # start the API server on 127.0.0.1:8080
-make build        # compile the netlens binary to bin/netlens
-make test         # go test ./...
-make lint         # go vet + gofmt check + golangci-lint
+make run        # API on http://127.0.0.1:8080, GET /api/status is live
 ```
 
-Flags and environment fallbacks:
-
-| Flag         | Env                 | Default         | Purpose                          |
-| ------------ | ------------------- | --------------- | -------------------------------- |
-| `-listen`    | `NETLENS_LISTEN`    | `127.0.0.1:8080`| HTTP listen address (API, UI)    |
-| `-interface` | `NETLENS_INTERFACE` | auto-detect     | interface override for discovery |
-
-The development backend default matches the frontend's `DEV_BACKEND_DEFAULT`, so
-`npm run dev` works against `make run` without extra configuration once `/api/status`
-is proxied or set via `PUBLIC_BACKEND_HTTP_URL`.
-
-### Frontend
-
-The frontend is developed independently as a SvelteKit application.
-
-Typical development flow:
+Terminal 2 — frontend:
 
 ```bash
 cd frontend
-npm install
-npm run dev
+npm ci          # or npm install
+npm run dev     # http://localhost:5173
 ```
 
-The SvelteKit development server provides fast local iteration. Configure the frontend API/WebSocket base URL so it can communicate with a locally running Go backend.
+No configuration is needed for this side-by-side setup: with the committed empty
+`.env`, the frontend dev server defaults to the local backend at
+`http://localhost:8080` (`DEV_BACKEND_DEFAULT` in `frontend/src/lib/config.ts`).
+The placeholder page shows the resolved REST/WS base URLs. Point it at a
+different backend with `PUBLIC_BACKEND_HTTP_URL` / `PUBLIC_BACKEND_WS_URL`
+(see `frontend/README.md`).
 
-Before integrating the frontend into the Go binary:
+Known gap: the backend does not send CORS headers yet, so browser `fetch` from
+:5173 to :8080 is rejected until the Epic 2 application shell adds them. The UI
+will fail visibly rather than fall back silently.
+
+Ports: backend `127.0.0.1:8080` (loopback-only by default, override with
+`-listen`/`NETLENS_LISTEN`), frontend dev `5173`, both configurable.
+
+### Repository layout
+
+The Go module lives in `backend/`, not at the repo root: a root-level module
+would make `go build ./...` and linters traverse `frontend/node_modules` (which
+contains third-party Go packages). Planned package boundaries (doc.go
+placeholders today, real code in later epics):
+
+```text
+/
+  backend/                    Go module "netlens/backend", single binary
+    cmd/netlens/              entrypoint: flags -> config -> HTTP server
+    internal/scanner/         active discovery (ARP, ICMP)
+    internal/discovery/       passive discovery (mDNS, SSDP, DHCP)
+    internal/capture/         Phase 2 packet capture (separate from scanner)
+    internal/domain/          canonical device model + concurrency-safe state
+    internal/fingerprint/     OUI vendor lookup, banner grabs
+    internal/api/             REST + WebSocket boundary (frontend contract)
+    internal/storage/         persistence (in-memory now, SQLite later)
+    internal/config/          validated runtime configuration
+    Makefile                  build / run / test / lint / fmt / vet / clean
+  frontend/                   SvelteKit SPA, builds independently of the backend
+    src/lib/config.ts         typed backend base-URL config
+    src/routes/               placeholder pages; device UI lands in Epic 11
+  .github/workflows/ci.yml    CI for both sides on every push/PR
+```
+
+### Checks and CI parity
+
+CI runs exactly these on every push/PR; run them locally before pushing:
 
 ```bash
-npm run check
-npm run build
+cd backend && make lint && go build ./... && go test ./...
+cd frontend && npm ci && npm run check && npm run lint && npm test && npm run build
 ```
+
+`make lint` itself is: `go vet ./...` + a gofmt check + `golangci-lint run`
+when installed. Config and flags: see `backend/README.md`.
 
 ### Production build
 

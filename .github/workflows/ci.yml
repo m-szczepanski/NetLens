@@ -15,6 +15,7 @@ jobs:
       - uses: actions/setup-go@v6
         with:
           go-version: stable
+          cache-dependency-path: backend/go.mod
       - name: Vet + gofmt
         run: make lint
       - run: go build ./...

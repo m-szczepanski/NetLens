@@ -3,7 +3,7 @@
 A browser-based tool for people who build and configure networks, focused on knowing everything connected to a LAN - not a Wireshark clone.
 
 ![status](https://img.shields.io/badge/status-early%20development-orange)
-![platform](https://img.shields.io/badge/platform-Windows%20%7C%20macOS%20%7C%20Linux-blue)
+![platform](https://img.shields.io/badge/platform-web-blue)
 ![license](https://img.shields.io/badge/license-MIT-green)
 
 ## Vision
